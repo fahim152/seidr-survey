@@ -19,7 +19,6 @@
             background: #007bff;
             color: #fff;
             padding: 15px 0;
-            text-align: center;
         }
 
         footer {
@@ -32,7 +31,16 @@
 </head>
 <body>
     <header>
-        <h1>SEIDR Dynamics</h1>
+        <div class="d-flex justify-content-between align-items-center px-4">
+            <h1>SEIDR Dynamics</h1>
+
+            @if(Auth::check())
+                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+                </form>
+            @endif
+        </div>
     </header>
 
     <main class="container mt-4">
