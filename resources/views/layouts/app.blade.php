@@ -5,18 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Survey App')</title>
     <!-- Include CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
 
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #333;
             margin: 0;
             padding: 0;
         }
 
         header {
-            background: #007bff;
             color: #fff;
             padding: 15px 0;
         }
@@ -27,12 +26,19 @@
             padding: 10px;
             margin-top: 20px;
         }
+
+        input{
+  background-color: none;
+  border: none;
+  border-bottom: 1px solid black;
+  background: transparent;
+}
     </style>
 </head>
 <body>
     <header>
-        <div class="d-flex justify-content-between align-items-center px-4">
-            <h1>SEIDR Dynamics</h1>
+        <div class="d-flex justify-content-between align-items-center">
+          
 
             @if(Auth::check())
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">

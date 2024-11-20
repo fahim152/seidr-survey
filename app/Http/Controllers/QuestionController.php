@@ -16,7 +16,7 @@ class QuestionController extends Controller
             dd('Questions file not found!');
         }
         $questions = json_decode(Storage::get('questions.json'), true);
-        $question = $questions[$step - 1] ?? null;
+        $question = $questions[2 - 1] ?? null;
 
         if (!$question) {
             return redirect()->route('thank-you');
