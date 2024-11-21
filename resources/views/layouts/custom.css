@@ -1,0 +1,59 @@
+body{
+  background-color: red!important;
+}
+
+input{
+  background-color:none ;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid black;
+}
+
+.form-container{
+  display: flex;
+  flex-direction: column;
+  padding: 15% 30% 5% 10%;
+  height: 100vh;
+  align-items: stretch;
+
+}
+
+label{
+  font-size: 3rem ;
+  font-weight: bold;
+
+}
+
+.button-container{
+display:  flex;
+margin-top: 25vh;
+justify-content: space-between;
+}
+
+.next-button{
+  background: transparent;
+  border: none;
+  font-size: 2rem; 
+  font-weight: bold;
+}
+
+.previous-button{
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #848c8e;
+}
+
+input{
+  color: #848c8e;
+  background-color: #0000;
+  border: 1px #000;
+  border-bottom: 2px solid #fff;
+  width: 80%;
+  height: 60px;
+  padding-bottom: 10px;
+  font-size: 28px;
+  line-height: 28px;
+}
+
