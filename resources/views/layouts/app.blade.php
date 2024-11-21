@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Survey App')</title>
     <!-- Include CSS -->
-  
+
 
     <style>
+
         body {
             font-family: Arial, sans-serif;
             background-color: #333;
@@ -34,11 +36,12 @@
   background: transparent;
 }
     </style>
+    <link href="{{ asset('css/survey.css') }}" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="d-flex justify-content-between align-items-center">
-          
+
 
             @if(Auth::check())
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
@@ -56,5 +59,6 @@
     <footer>
         <p>&copy; {{ date('Y') }} SEIDR Dynamics. All rights reserved.</p>
     </footer>
+    @yield('scripts')
 </body>
 </html>

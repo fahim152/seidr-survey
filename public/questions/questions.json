@@ -1,0 +1,67 @@
+{
+    "version": "1.0",
+    "questions": [
+        {
+            "id": 1,
+            "question": "Current stage of your company?",
+            "type": "radio",
+            "options": ["Seed", "Growth", "Mature"],
+            "next": 2
+        },
+        {
+            "id": 2,
+            "question": "What are you selling?",
+            "type": "radio",
+            "options": ["Product", "Service"],
+            "next": {
+                "Product": 3,
+                "Service": 4
+            }
+        },
+        {
+            "id": 3,
+            "question": "Is it B2B or B2C?",
+            "type": "radio",
+            "options": ["B2B", "B2C"],
+            "next": 5
+        },
+        {
+            "id": 4,
+            "question": "How many are you in the company?",
+            "type": "radio",
+            "options": ["1-3", "3-10", "10+"],
+            "next": 5
+        },
+        {
+            "id": 5,
+            "question": "Do you have a website?",
+            "type": "radio",
+            "options": ["Yes", "No"],
+            "next": {
+                "Yes": 6,
+                "No": 7
+            }
+        },
+        {
+            "id": 6,
+            "question": "What is the website for?",
+            "type": "radio",
+            "options": ["Blog", "Portfolio", "Sales"],
+            "next": 8
+        },
+        {
+            "id": 7,
+            "question": "Would you like a website?",
+            "type": "radio",
+            "options": ["Yes", "No"],
+            "next": 8
+        },
+        {
+            "id": 8,
+            "question": "Who should manage your website?",
+            "type": "radio",
+            "options": ["I can myself", "Guidance", "Hands off the wheel"],
+            "next": null
+        }
+    ]
+}

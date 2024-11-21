@@ -1,0 +1,113 @@
+
+.form-container{
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 50vh;
+    padding: 5% 30% 5% 10%;
+    display: flex;
+    color:white;
+}
+
+.top-text{
+  font-size: 3rem ;
+  font-weight: bold;
+  line-height: 48px;
+
+}
+.button-container{
+  justify-content: space-between;
+  align-self: flex-start;
+  align-items: flex-end;
+  display: flex;
+  gap:24px
+}
+
+.next-button{
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  font-weight: bold;
+  display:block;
+  height: 30px;
+  color: white;
+}
+
+.previous-button{
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #848c8e;
+  display:block;
+  height: 15px;
+
+}
+
+.radio-form{
+    display: flex;
+
+}
+
+input{
+  color: #848c8e;
+  background-color: #0000;
+  border: 1px #000;
+  border-bottom: 2px solid #fff;
+  width: 80%;
+  height: 60px;
+  padding-bottom: 10px;
+  font-size: 28px;
+  line-height: 28px;
+}
+
+button{
+cursor: pointer;
+}
+
+input:focus {
+    outline: none;
+}
+
+
+
+
+label {
+    font-weight: bold;
+}
+
+
+.form-top-part{
+    display:flex;
+    flex-direction:column;
+    gap:36px;
+}
+
+.image-radio-group {
+  display: flex;
+  gap: 10px;
+}
+
+.image-radio {
+  position: relative;
+  cursor: pointer;
+}
+
+.image-radio input[type="radio"] {
+  display: none; /* Hide the default radio buttons */
+}
+
+.image-radio img {
+  border: 2px solid transparent;
+  border-radius: 13px;
+
+}
+
+.image-radio input[type="radio"]:checked + img {
+  border: 3px solid  #50b376; /* Highlight color for selected image */
+  transform: scale(1.05); /* Slightly enlarge the selected image */
+}
+
+.image-radio img:hover {
+  border-color: #ccc; /* Highlight on hover */
+}

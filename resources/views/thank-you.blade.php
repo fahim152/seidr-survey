@@ -6,6 +6,6 @@
 <div class="text-center">
     <h1>Thank You!</h1>
     <p>Your responses have been recorded.</p>
-    <a href="{{ url('/') }}" class="btn btn-primary mt-3">Go Back Home</a>
+    <a href="{{ url('/survey') }}" class="btn btn-primary mt-3">Go Back Home</a>
 </div>
 @endsection

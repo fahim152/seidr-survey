@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +9,17 @@ class Response extends Model
     use HasFactory;
 
     protected $fillable = [
-        'answers', // Allow answers to be mass-assigned
+        'answers',
+        'question_id',
     ];
+
+    protected $casts = [
+        'answers' => 'array', // Automatically cast JSON to array
+    ];
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
 }
+
