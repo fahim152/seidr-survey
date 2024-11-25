@@ -16,7 +16,7 @@ class ResponseController extends Controller
         $selectedVersion = $request->get('version', Question::max('version')); // Default to the latest version
         $questionSet = Question::where('version', $selectedVersion)->first();
         $questions = $questionSet ? $questionSet->questions : [];
-        $responses = Response::paginate(10);
+        $responses = Response::paginate(perPage: 20);
 
         $responses->transform(function ($response) {
             $response->answers = json_decode($response->answers, true); // Decode JSON answers
