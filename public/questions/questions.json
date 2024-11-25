@@ -1,5 +1,5 @@
 {
-    "version": "1.0",
+    "version": "1",
     "questions": [
         {
             "id": 1,
@@ -15,7 +15,7 @@
             "options": ["Product", "Service"],
             "next": {
                 "Product": 3,
-                "Service": 4
+                "Service": 3
             }
         },
         {
@@ -23,7 +23,7 @@
             "question": "Is it B2B or B2C?",
             "type": "radio",
             "options": ["B2B", "B2C"],
-            "next": 5
+            "next": 4
         },
         {
             "id": 4,
@@ -47,17 +47,27 @@
             "question": "What is the website for?",
             "type": "radio",
             "options": ["Blog", "Portfolio", "Sales"],
-            "next": 8
+            "next": 9
         },
         {
             "id": 7,
             "question": "Would you like a website?",
             "type": "radio",
             "options": ["Yes", "No"],
-            "next": 8
+            "next": {
+                "Yes": 8,
+                "No": null
+            }
         },
         {
             "id": 8,
+            "question": "What is the website for?",
+            "type": "radio",
+            "options": ["Blog", "Portfolio", "Sales"],
+            "next": 9
+        },
+        {
+            "id": 9,
             "question": "Who should manage your website?",
             "type": "radio",
             "options": ["I can myself", "Guidance", "Hands off the wheel"],

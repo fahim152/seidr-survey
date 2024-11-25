@@ -2,6 +2,7 @@ let questions = [];
 let currentStep = 1; // Tracks the current question
 let questionId = null; // Store question_id from the backend
 let userAnswers = {}; // Initialize to store user's answers
+let displayedQuestions = []; // Track questions shown to the user
 
 // Fetch questions from the backend
 fetch('/api/questions')
@@ -31,6 +32,11 @@ function showQuestion(step) {
     }
 
     console.log('Current question:', question); // Debugging
+
+    // Track the question being displayed
+    if (!displayedQuestions.includes(question.id)) {
+        displayedQuestions.push(question.id);
+    }
 
     // Question Header
     const questionHeader = document.createElement('div');
@@ -88,54 +94,63 @@ function saveAnswer(questionId, answer) {
     userAnswers[questionId] = answer;
 }
 
-// Navigate to the previous question
-function prevQuestion() {
-    if (currentStep > 1) {
-        currentStep--;
-        showQuestion(currentStep);
-    }
-}
-
 // Navigate to the next question
 function nextQuestion() {
     const currentQuestion = questions[currentStep - 1];
     console.log('Navigating to the next question:', currentQuestion); // Debugging
 
-    // Get the selected answer
+    // Get the selected answer for the current question
     const selectedOption = document.querySelector(`input[name="question_${currentQuestion.id}"]:checked`);
 
-    // Validation: Ensure the user selects an answer
+    // Validate only the current question (visible on screen)
     if (!selectedOption) {
         alert('Please select an answer before proceeding.');
         return;
     }
 
-    // Save the answer
+    // Save the answer for the current question
     saveAnswer(currentQuestion.id, selectedOption.value);
 
-    // Conditional navigation
+    // Determine the next step based on the `next` field in the current question
+    let nextStep;
     if (typeof currentQuestion.next === 'object') {
-        const nextStep = currentQuestion.next[selectedOption.value];
-        if (nextStep) {
-            currentStep = questions.findIndex(q => q.id === nextStep) + 1;
-        } else {
-            alert('Invalid next question mapping.');
-        }
+        nextStep = currentQuestion.next[selectedOption.value]; // Conditional navigation
     } else {
-        currentStep++;
+        nextStep = currentQuestion.next; // Default next step
     }
 
-    showQuestion(currentStep);
+    // Check if the next step is `null`, indicating the survey should end
+    if (nextStep === null) {
+        console.log('Survey ended early. Submitting answers...'); // Debugging
+        submitSurvey(); // Automatically submit the survey
+        return;
+    }
+
+    // Validate the next step (ensure it's a valid question ID)
+    if (nextStep) {
+        const nextStepIndex = questions.findIndex(q => q.id === nextStep);
+        if (nextStepIndex === -1) {
+            alert('Invalid navigation detected. Please check the question structure.');
+            return;
+        }
+        currentStep = nextStepIndex + 1; // Move to the next question based on ID
+    } else {
+        currentStep++; // Fallback: Proceed to the next question in the sequence
+    }
+
+    showQuestion(currentStep); // Display the next question
 }
+
 
 // Submit survey responses
 function submitSurvey() {
     console.log('Submitting survey...'); // Debugging
     console.log('User answers:', userAnswers); // Debugging
 
-    // Ensure all questions have answers
-    for (const question of questions) {
-        if (!userAnswers[question.id]) {
+    // Validate only the displayed questions
+    for (const questionId of displayedQuestions) {
+        if (!userAnswers[questionId]) {
+            const question = questions.find(q => q.id === questionId);
             alert(`Please answer the question: ${question.question}`);
             return;
         }
