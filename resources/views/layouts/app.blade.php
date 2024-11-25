@@ -39,19 +39,6 @@
     <link href="{{ asset('css/survey.css') }}" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="d-flex justify-content-between align-items-center">
-
-
-            @if(Auth::check())
-                <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-danger btn-sm">Logout</button>
-                </form>
-            @endif
-        </div>
-    </header>
-
     <main class="container mt-4">
         @yield('content')
     </main>

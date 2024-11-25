@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ResponseController;
 use Illuminate\Support\Facades\Route;
 
 // Static client-side questions (No backend logic for step-by-step questions)
@@ -20,6 +21,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected Routes for Admin
 Route::middleware(['auth'])->group(function () {
-    Route::get('/responses', [QuestionController::class, 'showAllResponses'])->name('responses.index');
-    Route::get('/export-responses', [QuestionController::class, 'exportResponses'])->name('responses.export');
+    Route::get('/responses', [ResponseController::class, 'index'])->name('responses.index');
+    Route::get('/export-responses', [ResponseController::class, 'exportResponses'])->name('responses.export');
+    Route::get('/analytics', [ResponseController::class, 'analytics'])->name('responses.analytics'); // Analytics page
 });
