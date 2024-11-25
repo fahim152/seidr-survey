@@ -24,4 +24,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/responses', [ResponseController::class, 'index'])->name('responses.index');
     Route::get('/export-responses', [ResponseController::class, 'exportResponses'])->name('responses.export');
     Route::get('/analytics', [ResponseController::class, 'analytics'])->name('responses.analytics'); // Analytics page
+    Route::get('/granular-data', [ResponseController::class, 'granularData'])->name('responses.granular');
 });

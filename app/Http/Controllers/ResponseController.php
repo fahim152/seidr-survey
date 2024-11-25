@@ -103,4 +103,36 @@ class ResponseController extends Controller
         return view('analytics.index', compact('analyticsData', 'questions', 'versions', 'selectedVersion', 'totalParticipants', 'startDate', 'endDate', 'correlationData'));
     }
 
+    public function granularData()
+{
+    $correlationData = $this->getCorrelationData(); // Replace with your logic to fetch correlation data
+
+    return view('responses.granular', [
+        'correlationData' => $correlationData,
+    ]);
+}
+
+private function getCorrelationData()
+{
+    // Replace this with your actual logic for fetching and structuring the correlation data
+    return [
+        // Example data structure
+        1 => [
+            'question' => 'Current stage of your company?',
+            'answers' => [
+                'Growth' => [
+                    'count' => 7,
+                    'children' => [
+                        2 => [
+                            'B2B' => 5,
+                            'B2C' => 2,
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
+}
+
+
 }

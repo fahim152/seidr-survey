@@ -58,7 +58,7 @@
     <!-- Correlation Section -->
     <div class="mt-5">
         <h2>Granular Data/Correlations</h2>
-        <div id="treeContainer" style="width: 100%; height: 600px; border: 1px solid #ddd;"></div>
+        <div id="treeContainer" style="width: 100%; height: 600px; overflow: auto; border: 1px solid #ddd;"></div>
     </div>
 </div>
 @endsection
@@ -139,157 +139,114 @@
     document.addEventListener('DOMContentLoaded', function () {
         const correlationData = @json($correlationData);
 
-        // Debug: Log correlationData to console
-        console.log('Correlation Data:', correlationData);
-
         if (!correlationData || Object.keys(correlationData).length === 0) {
             console.error('No correlation data available.');
             return;
         }
 
-        // Prepare data for D3 tree
-        const treeData = Object.keys(correlationData).map(parentId => {
-            const parent = correlationData[parentId];
-            return {
-                name: parent.question,
-                children: Object.keys(parent.answers).map(answer => {
-                    const answerData = parent.answers[answer];
-                    return {
-                        name: `${answer} (${answerData.count} participants)`,
-                        children: Object.keys(answerData.children).map(childId => {
-                            const childAnswers = answerData.children[childId];
-                            return {
-                                name: `Question ${childId}`,
-                                children: Object.keys(childAnswers).map(childAnswer => ({
-                                    name: `${childAnswer}: ${childAnswers[childAnswer]} participants`
-                                }))
-                            };
-                        })
-                    };
-                })
-            };
-        });
-
-        // D3 Tree Configuration
-        const margin = { top: 20, right: 120, bottom: 20, left: 120 };
-        const width = 1200 - margin.right - margin.left;
-        const height = 800 - margin.top - margin.bottom;
-
-        const svg = d3.select("#treeContainer").append("svg")
-            .attr("width", width + margin.right + margin.left)
-            .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
-
-        const root = d3.hierarchy({ name: "Root", children: treeData });
-        root.x0 = height / 2;
-        root.y0 = 0;
-
-        const treeLayout = d3.tree().size([height, width]);
-
-        // Collapsible nodes
-        function collapse(d) {
-            if (d.children) {
-                d._children = d.children;
-                d._children.forEach(collapse);
-                d.children = null;
+        // Prepare data for D3 tree with error handling
+        const buildTree = (data, parentId = null) => {
+            const tree = [];
+            if (!data || typeof data !== 'object') {
+                return tree; // If data is null or not an object, return an empty array
             }
-        }
 
-        root.children.forEach(collapse);
-        update(root);
+            Object.keys(data).forEach(questionId => {
+                const questionData = data[questionId];
+                if (!questionData || typeof questionData !== 'object') return; // Skip invalid question data
 
-        function update(source) {
-            const treeData = treeLayout(root);
-            const nodes = treeData.descendants();
-            const links = treeData.links();
+                if (parentId === null || questionId === parentId) {
+                    tree.push({
+                        name: questionData.question || `Question ${questionId}`, // Fallback to "Question X"
+                        children: questionData.answers
+                            ? Object.keys(questionData.answers).map(answer => {
+                                  const answerData = questionData.answers[answer];
+                                  if (!answerData || typeof answerData !== 'object') return null; // Skip invalid answer data
 
-            nodes.forEach(d => d.y = d.depth * 180);
-
-            // Nodes
-            const node = svg.selectAll('g.node')
-                .data(nodes, d => d.id || (d.id = ++i));
-
-            const nodeEnter = node.enter().append('g')
-                .attr('class', 'node')
-                .attr('transform', d => `translate(${source.y0},${source.x0})`)
-                .on('click', (event, d) => {
-                    d.children = d.children ? null : d._children;
-                    update(d);
-                });
-
-            nodeEnter.append('circle')
-                .attr('class', 'node')
-                .attr('r', 10)
-                .style('fill', d => d._children ? 'lightsteelblue' : '#fff');
-
-            nodeEnter.append('text')
-                .attr('dy', '.35em')
-                .attr('x', d => d.children || d._children ? -13 : 13)
-                .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
-                .text(d => d.data.name)
-                .style('fill-opacity', 1);
-
-            const nodeUpdate = nodeEnter.merge(node);
-
-            nodeUpdate.transition()
-                .duration(200)
-                .attr('transform', d => `translate(${d.y},${d.x})`);
-
-            nodeUpdate.select('circle.node')
-                .attr('r', 10)
-                .style('fill', d => d._children ? 'lightsteelblue' : '#fff');
-
-            nodeUpdate.select('text')
-                .style('fill-opacity', 1);
-
-            const nodeExit = node.exit().transition()
-                .duration(200)
-                .attr('transform', d => `translate(${source.y},${source.x})`)
-                .remove();
-
-            nodeExit.select('circle')
-                .attr('r', 1e-6);
-
-            nodeExit.select('text')
-                .style('fill-opacity', 1e-6);
-
-            // Links
-            const link = svg.selectAll('path.link')
-                .data(links, d => d.target.id);
-
-            const linkEnter = link.enter().insert('path', 'g')
-                .attr('class', 'link')
-                .attr('d', d => {
-                    const o = { x: source.x0, y: source.y0 };
-                    return diagonal(o, o);
-                });
-
-            linkEnter.merge(link)
-                .transition()
-                .duration(200)
-                .attr('d', d => diagonal(d.source, d.target));
-
-            link.exit().transition()
-                .duration(200)
-                .attr('d', d => {
-                    const o = { x: source.x, y: source.y };
-                    return diagonal(o, o);
-                })
-                .remove();
-
-            nodes.forEach(d => {
-                d.x0 = d.x;
-                d.y0 = d.y;
+                                  return {
+                                      name: `${answer} (${answerData.count || 0} participants)`,
+                                      children: buildTree(answerData.children) // Recursively build tree for child questions
+                                  };
+                              }).filter(child => child !== null) // Remove null entries
+                            : []
+                    });
+                }
             });
 
-            function diagonal(s, d) {
-                return `M ${s.y} ${s.x}
-                        C ${(s.y + d.y) / 2} ${s.x},
-                          ${(s.y + d.y) / 2} ${d.x},
-                          ${d.y} ${d.x}`;
-            }
-        }
+            return tree;
+        };
+
+        const treeData = buildTree(correlationData);
+
+        // Set up SVG dimensions
+        const margin = { top: 20, right: 200, bottom: 20, left: 200 };
+        const width = 1400;
+        const height = 800;
+
+        const svg = d3.select("#treeContainer").append("svg")
+            .attr("width", "100%")
+            .attr("height", height)
+            .call(d3.zoom().on("zoom", function (event) {
+                g.attr("transform", event.transform);
+            }))
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const g = svg.append("g");
+
+        const root = d3.hierarchy({ children: treeData });
+
+        // Tree layout configuration
+        const treeLayout = d3.tree()
+            .nodeSize([100, 300]) // Vertical: 100px, Horizontal: 300px
+            .separation((a, b) => a.parent === b.parent ? 1 : 1.5);
+
+        treeLayout(root);
+
+        // Dynamically adjust height based on the number of nodes
+        const totalHeight = Math.max(root.height * 120, height);
+        svg.attr("height", totalHeight);
+
+        // Add links between nodes
+        g.selectAll(".link")
+            .data(root.links())
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("fill", "none")
+            .attr("stroke", "#ccc")
+            .attr("stroke-width", 2)
+            .attr("d", d3.linkHorizontal()
+                .x(d => d.y)
+                .y(d => d.x));
+
+        // Add nodes
+        const node = g.selectAll(".node")
+            .data(root.descendants())
+            .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", d => `translate(${d.y},${d.x})`);
+
+        // Node circles
+        node.append("circle")
+            .attr("r", 10)
+            .attr("fill", d => (d.children ? "lightsteelblue" : "#fff"))
+            .attr("stroke", "#000")
+            .attr("stroke-width", 2);
+
+        // Node labels
+        node.append("text")
+            .attr("dy", 3)
+            .attr("x", d => (d.children ? -15 : 15))
+            .attr("text-anchor", d => (d.children ? "end" : "start"))
+            .text(d => d.data.name)
+            .style("font-size", "12px");
+
+        // Add tooltips for nodes
+        node.append("title")
+            .text(d => d.data.name);
     });
 </script>
+
+
+
 @endsection
