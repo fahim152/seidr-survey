@@ -10,24 +10,12 @@
 
     <style>
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #333;
-            margin: 0;
-            padding: 0;
-        }
 
         header {
             color: #fff;
             padding: 15px 0;
         }
 
-        footer {
-            background: #f1f1f1;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
 
         input{
   background-color: none;

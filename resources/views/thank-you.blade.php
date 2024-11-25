@@ -6,6 +6,9 @@
 <div class="text-center">
     <h1>Thank You!</h1>
     <p>Your responses have been recorded.</p>
-    <a href="{{ url('/survey') }}" class="btn btn-primary mt-3">Go Back Home</a>
+    <p>Now it's time to book a call with us to learn about the next steps.</p>
+    <button>
+    <a href="https://calendly.com/a-pank/30min">Book a call</a>
+    </button>
 </div>
 @endsection

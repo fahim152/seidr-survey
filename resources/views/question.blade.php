@@ -3,10 +3,12 @@
 @section('title', 'Survey')
 
 @section('content')
+
 <div id="survey-app">
     <!-- Container for dynamic question content -->
     <div id="question-container" class="form-container">
         <!-- Questions will be dynamically injected here -->
+         
     </div>
 
     <!-- Navigation Buttons -->

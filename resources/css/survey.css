@@ -1,16 +1,14 @@
 
 .form-container{
     flex-direction: column;
-    justify-content: space-between;
     align-items: stretch;
-    height: 50vh;
     padding: 5% 30% 5% 10%;
     display: flex;
     color:white;
 }
 
 .top-text{
-  font-size: 3rem ;
+  font-size: 3rem;
   font-weight: bold;
   line-height: 48px;
 
